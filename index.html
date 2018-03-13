@@ -8,7 +8,8 @@
     <title>Employment Tracking</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
         crossorigin="anonymous">
-
+    <link href="https://fonts.googleapis.com/css?family=Rozha+One" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
 </head>
 
 <body>
@@ -20,33 +21,97 @@
     </div>
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
-        <form>
-            <div class="form-group">
-                <label for="exampleInputEmpoylee1">Employee Name</label>
-                <input type="employee" class="form-control" id="exampleInputEmployee" aria-describedby="employeeHelp" placeholder="Enter employee">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputRole1">Role</label>
-                <input type="role" class="form-control" id="exampleInputRole1" placeholder="Role">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputDate1">Start Date (DD/MM/YY)</label>
-                <input type="date" class="form-control" id="exampleInputDate1" placeholder="Date">
-            </div>
-            <div class="form-group">
-                <label for="exampleInputRate1">Monthly Rate</label>
-                <input type="rate" class="form-control" id="exampleInputR1" placeholder="Compensation">
-            </div>
-            <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
-        </form>
+            <form>
+                <div class="form-group">
+                    <label for="exampleInputEmpoylee1">Employee Name</label>
+                    <input type="employee" class="form-control" id="exampleInputEmployee" aria-describedby="employeeHelp" placeholder="Enter employee">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputRole1">Role</label>
+                    <input type="role" class="form-control" id="exampleInputRole1" placeholder="Role">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputDate1">Start Date (DD/MM/YY)</label>
+                    <input type="date" class="form-control" id="exampleInputDate1" placeholder="Date">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputRate1">Monthly Rate</label>
+                    <input type="rate" class="form-control" id="exampleInputR1" placeholder="Base Salary in USD">
+                </div>
+                <button type="submit" class="btn btn-primary" id="submit-btn">Submit</button>
+            </form>
+        </div>
     </div>
-</div>
-    
+    <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Employee Name</th>
+                        <th>Role</th>
+                        <th>Start Date</th>
+                        <th>Monthly Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
     <script src="./app.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
         crossorigin="anonymous"></script>
+        <script src="https://www.gstatic.com/firebasejs/4.11.0/firebase.js"></script>
+        <script>
+          // Initialize Firebase
+          var config = {
+            apiKey: "AIzaSyC5UoE7R1tXRPWV1XXGIyQ84smUc53vg64",
+            authDomain: "employee-payment.firebaseapp.com",
+            databaseURL: "https://employee-payment.firebaseio.com",
+            projectId: "employee-payment",
+            storageBucket: "",
+            messagingSenderId: "624404473610"
+          };
+
+          firebase.initializeApp(config);
+            var database = firebase.database();
+
+            var name = "";
+            var role = "";
+            var startdate ="" ;
+            var rate = "";
+
+            $("#add-employee").on("click", function(event) {
+                event.preventDefault();
+
+                name = $("#name-input").val().trim();
+                role = $("#role-input").val().trim();
+                startdate = $("#startdate-input").val().trim();
+                rate = $("#rate-input").val().trim();
+
+               database.ref().push({
+                   name: name,
+                   role: role,
+                   startdate: startdate,
+                   rate: rate,
+                   dateAdded: friebase.database.ServerValue.TIMESTAMP
+               });
+
+            });
+
+            database.ref().orderByChild("dateAdded").limitToLast(1).on("child_added", function(snapshot) {
+                var sv = snapshot.val();
+
+                console.log(sv.name);
+                console.log(sv.role);
+                console.log(sv.startdate);
+                console.log(sv.rate);
+
+            });
+            </script>
 </body>
 
 </html>
